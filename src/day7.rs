@@ -1,9 +1,4 @@
-use std::pin::Pin;
-use std::{fs, thread::current};
-use slab_tree::iter::LevelOrder;
-use trees::Node;
-use trees::tr;
-use trees::Tree;
+use std::fs;
 use slab_tree::*;
 
 #[derive(Debug)]
@@ -25,11 +20,7 @@ fn add_size(node: &mut NodeMut<Folder>, size: u64) {
     add_size(&mut parent, size);
 }
 
-
-pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
-    let commands: String = fs::read_to_string(filepath)?.parse().unwrap();
-    let mut tree = TreeBuilder::new().with_root(Folder{name: "root".to_string(), size: 0}).build();
-    let mut current_node_id = tree.root_id().unwrap();
+fn update_tree(commands: String, tree: &mut slab_tree::Tree<Folder>, mut current_node_id: NodeId) {
     let result = commands
         .split("$ ")
         .skip(1)
@@ -68,6 +59,14 @@ pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
            _ => ()
         })
         .collect::<Vec<_>>();
+}
+
+
+pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
+    let commands: String = fs::read_to_string(filepath)?.parse().unwrap();
+    let mut tree = TreeBuilder::new().with_root(Folder{name: "root".to_string(), size: 0}).build();
+    let mut current_node_id = tree.root_id().unwrap();
+    update_tree(commands, &mut tree, current_node_id);
     
     // dbg!(commands.split("$ ").collect::<Vec<_>>());
     // dbg!(tree);
@@ -96,44 +95,7 @@ pub fn day7_2(filepath: &str) -> Result<u64, std::io::Error> {
     let commands: String = fs::read_to_string(filepath)?.parse().unwrap();
     let mut tree = TreeBuilder::new().with_root(Folder{name: "root".to_string(), size: 0}).build();
     let mut current_node_id = tree.root_id().unwrap();
-    let result = commands
-        .split("$ ")
-        .skip(1)
-        .map(|single_command| match single_command.chars().next().unwrap() {
-           'c' => {
-                let folder_to_go = single_command.split(" ").collect::<Vec<&str>>()[1];
-                match folder_to_go {
-                    "..\n" => {
-                        let current_node = tree.get(current_node_id).unwrap();
-                        let parent = current_node.parent().unwrap();
-                        current_node_id = parent.node_id();
-                    },
-                    _ => {
-                        let new_subfolder = Folder{name: folder_to_go.replace("\n", "").to_string(), size: 0};
-                        let mut current_node = tree.get_mut(current_node_id).unwrap();
-                        let new_node = current_node.append(new_subfolder);
-                        current_node_id = new_node.node_id();
-                    }
-                }
-           },
-           'l' => {
-                let dir_or_number: () = single_command.lines().map(|ls_output_line| {
-                    let ls_output_dir_or_number = ls_output_line.split(" ").collect::<Vec<_>>()[0];
-                    // dbg!(ls_output_dir_or_number);
-                    match ls_output_dir_or_number {
-                        "dir" => (),
-                        "ls" => (),
-                        _ => {
-                            let size = ls_output_dir_or_number.parse::<u64>().unwrap();
-                            let mut current_node = tree.get_mut(current_node_id).unwrap();
-                            add_size(&mut current_node, size);
-                        }
-                    }
-                }).collect();
-           },
-           _ => ()
-        })
-        .collect::<Vec<_>>();
+    update_tree(commands, &mut tree, current_node_id);
     
     // dbg!(commands.split("$ ").collect::<Vec<_>>());
     // dbg!(tree);
