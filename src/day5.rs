@@ -1,4 +1,4 @@
-pub fn day5_1(filestring: &'static str, part2: bool) -> Result<u32, std::io::Error> {
+pub fn day5_1(filestring: &'static str, part2: bool) -> Result<String, std::io::Error> {
     let (stacks, moves) = filestring.split_once("\n\n").unwrap();
 
     // Const arguments are a bitch and the char init requires const as size
@@ -46,7 +46,7 @@ pub fn day5_1(filestring: &'static str, part2: bool) -> Result<u32, std::io::Err
 
     dbg!(&result_string);
 
-    Ok(0)
+    Ok(result_string)
 }
 
 
@@ -57,11 +57,11 @@ mod tests {
 
     #[test]
     fn test_day5_1() {
-        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], false).unwrap(), 0);
+        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], false).unwrap(), "CMZ");
     }
 
     #[test]
     fn test_day5_2() {
-        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], true).unwrap(), 0);
+        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], true).unwrap(), "MCD");
     }
 }

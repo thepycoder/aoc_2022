@@ -9,7 +9,7 @@ mod day6;
 mod day7;
 
 fn main() -> io::Result<()> {
-    let day = 7;
+    let day = 5;
 
     if day == 1 {
         let total = day1::day1_1("data/input1_1.txt");
