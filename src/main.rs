@@ -5,9 +5,10 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 fn main() -> io::Result<()> {
-    let day = 5;
+    let day = 6;
 
     if day == 1 {
         let total = day1::day1_1("data/input1_1.txt");
@@ -46,6 +47,14 @@ fn main() -> io::Result<()> {
         println!("{}", total.unwrap());
 
         let total = day5::day5_1(include_str!["../data/input5_1.txt"], true);
+        println!("{}", total.unwrap());
+    }
+
+    if day == 6 {
+        let total = day6::day6_1(include_str!["../data/input6_1.txt"], 4);
+        println!("{}", total.unwrap());
+
+        let total = day6::day6_1(include_str!["../data/input6_1.txt"], 14);
         println!("{}", total.unwrap());
     }
     Ok(())
