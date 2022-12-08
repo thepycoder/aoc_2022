@@ -7,9 +7,10 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 fn main() -> io::Result<()> {
-    let day = 5;
+    let day = 8;
 
     if day == 1 {
         let total = day1::day1_1("data/input1_1.txt");
@@ -64,6 +65,14 @@ fn main() -> io::Result<()> {
         println!("{}", total.unwrap());
 
         let total = day7::day7_2("data/input7_1.txt");
+        println!("{}", total.unwrap());
+    }
+
+    if day == 8 {
+        let total = day8::day8_1("data/input8_1.txt");
+        println!("{}", total.unwrap());
+
+        let total = day8::day8_2("data/input8_1.txt");
         println!("{}", total.unwrap());
     }
     Ok(())
