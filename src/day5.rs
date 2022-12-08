@@ -26,8 +26,8 @@ pub fn day5_1(filestring: &'static str, part2: bool) -> Result<String, std::io::
         let origin: usize = charvec[3].parse::<usize>().unwrap() - 1; // zero-based stack indexing
         let dest: usize = charvec[5].parse::<usize>().unwrap() - 1;
 
-        dbg!(&charvec);
-        dbg!(&stack_vec);
+        // dbg!(&charvec);
+        // dbg!(&stack_vec);
 
         let current_stack_size = stack_vec[origin].len();
         let mut on_crane = stack_vec[origin].split_off( current_stack_size - amount);
@@ -36,7 +36,7 @@ pub fn day5_1(filestring: &'static str, part2: bool) -> Result<String, std::io::
         }
         stack_vec[dest].append(&mut on_crane);
 
-        dbg!(&stack_vec);
+        // dbg!(&stack_vec);
     }
 
     let mut result_string = String::from("");
@@ -44,7 +44,7 @@ pub fn day5_1(filestring: &'static str, part2: bool) -> Result<String, std::io::
         result_string.push(stack.pop().unwrap());
     }
 
-    dbg!(&result_string);
+    // dbg!(&result_string);
 
     Ok(result_string)
 }
