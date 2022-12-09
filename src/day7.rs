@@ -3,7 +3,7 @@ use slab_tree::*;
 
 #[derive(Debug)]
 struct Folder {
-    name: String,
+    _name: String,
     size: u64
 }
 
@@ -22,7 +22,7 @@ fn add_size(node: &mut NodeMut<Folder>, size: u64) {
 
 fn update_tree(commands: String, tree: &mut slab_tree::Tree<Folder>) {
     let mut current_node_id = tree.root_id().unwrap();  // track on which node in the tree we are right now
-    let result = commands
+    let _result = commands
         .split("$ ")  // First split off each command and its associated output if any
         .skip(1) // Skipt the first line because it will be empty (rust things)
         .map(|single_command| match single_command.chars().next().unwrap() {  // For every command, check the first character to see which command it is
@@ -35,7 +35,7 @@ fn update_tree(commands: String, tree: &mut slab_tree::Tree<Folder>) {
                         current_node_id = parent.node_id();
                     },
                     _ => {  // If it is anything else, we need to create that new folder and add it to our tree
-                        let new_subfolder = Folder{name: folder_to_go.replace("\n", "").to_string(), size: 0};
+                        let new_subfolder = Folder{_name: folder_to_go.replace("\n", "").to_string(), size: 0};
                         let mut current_node = tree.get_mut(current_node_id).unwrap();
                         let new_node = current_node.append(new_subfolder);
                         // When this new folder is created, go into it by setting the current node tracker as such
@@ -44,7 +44,7 @@ fn update_tree(commands: String, tree: &mut slab_tree::Tree<Folder>) {
                 }
            },
            'l' => {  // if it's ls, we want to process its output
-                let dir_or_number: () = single_command.lines().map(|ls_output_line| {  // for every line of ls output
+                let _dir_or_number: () = single_command.lines().map(|ls_output_line| {  // for every line of ls output
                     let ls_output_dir_or_number = ls_output_line.split(" ").collect::<Vec<_>>()[0];  // get the first thing on the line
                     // dbg!(ls_output_dir_or_number);
                     match ls_output_dir_or_number {
@@ -67,7 +67,7 @@ fn update_tree(commands: String, tree: &mut slab_tree::Tree<Folder>) {
 
 pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
     let commands: String = fs::read_to_string(filepath)?.parse().unwrap();
-    let mut tree = TreeBuilder::new().with_root(Folder{name: "root".to_string(), size: 0}).build();
+    let mut tree = TreeBuilder::new().with_root(Folder{_name: "root".to_string(), size: 0}).build();
     update_tree(commands, &mut tree);
     
     let result: u64 = tree.root()
@@ -90,7 +90,7 @@ pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
 
 pub fn day7_2(filepath: &str) -> Result<u64, std::io::Error> {
     let commands: String = fs::read_to_string(filepath)?.parse().unwrap();
-    let mut tree = TreeBuilder::new().with_root(Folder{name: "root".to_string(), size: 0}).build();
+    let mut tree = TreeBuilder::new().with_root(Folder{_name: "root".to_string(), size: 0}).build();
     update_tree(commands, &mut tree);
     
     let result: Vec<u64> = tree.root()

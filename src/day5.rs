@@ -4,7 +4,7 @@ pub fn day5_1(filestring: &'static str, part2: bool, nr_of_stacks: usize) -> Res
     // Prepare vec of vecs to keep track of each stack
     let split_stacks: Vec<&str> = stacks.split("\n").collect();
     let mut stack_vec: Vec<Vec<char>> = vec![Vec::new(); nr_of_stacks];
-    for (row, stack_row) in split_stacks.iter().enumerate() {
+    for (_, stack_row) in split_stacks.iter().enumerate() {
         for (stack_nr, col) in (1..stack_row.len()).step_by(4).enumerate() {
             let elf_crate = stack_row.chars().nth(col).unwrap();
             if elf_crate as u8 != b' '  {

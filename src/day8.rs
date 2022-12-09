@@ -1,7 +1,6 @@
 use std::fs;
 use itertools::izip;
 use ndarray::{Array, ArrayBase, OwnedRepr, Dim, Array2, Axis, s};
-use ndarray::array;
 use ndarray_stats::QuantileExt;
 
 

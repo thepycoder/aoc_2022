@@ -1,8 +1,7 @@
 use core::panic;
 use std::collections::HashSet;
 use std::fs;
-use std::io;
-use std::iter::zip;
+// use std::io;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 struct Coord {
@@ -24,34 +23,34 @@ fn deduplicate(coordinates: Vec<Coord>) -> Vec<Coord> {
     deduplicated
 }
 
-fn display_grid(coordinates: &Vec<Coord>) -> io::Result<()> {
+// fn display_grid(coordinates: &Vec<Coord>) -> io::Result<()> {
 
-    let size: i32 = 26;
+//     let size: i32 = 26;
 
-    // Create the grid and fill it with dots
-    let mut grid = vec![vec!['.'; (size + 1) as usize]; size as usize];
+//     // Create the grid and fill it with dots
+//     let mut grid = vec![vec!['.'; (size + 1) as usize]; size as usize];
 
-    // Replace the dots at the coordinates in the vector with #
-    let mut nr: u8 = 0;
-    for coord in coordinates {
-        grid[(coord.y + 21) as usize][(coord.x + 12) as usize] = nr.to_string().chars().nth(0).unwrap();
-        nr += 1;
-        if nr == 10 {
-            nr = 0
-        }
-    }
+//     // Replace the dots at the coordinates in the vector with #
+//     let mut nr: u8 = 0;
+//     for coord in coordinates {
+//         grid[(coord.y + 21) as usize][(coord.x + 12) as usize] = nr.to_string().chars().nth(0).unwrap();
+//         nr += 1;
+//         if nr == 10 {
+//             nr = 0
+//         }
+//     }
 
-    // Print the grid
-    for row in grid {
-        for cell in row {
-            print!("{}", cell);
-        }
-        println!();
-    }
-    println!("=======");
+//     // Print the grid
+//     for row in grid {
+//         for cell in row {
+//             print!("{}", cell);
+//         }
+//         println!();
+//     }
+//     println!("=======");
 
-    Ok(())
-}
+//     Ok(())
+// }
 
 
 pub fn day9_1(filepath: &str) -> Result<usize, std::io::Error> {
@@ -111,8 +110,8 @@ pub fn day9_2(filepath: &str) -> Result<usize, std::io::Error> {
         .map(|command| {
             let amount = command[1].parse::<i32>().unwrap();
             let mut tail_positions: Vec<Coord> = Vec::new();
-            let mut scope_tails: &mut Vec<Coord> = &mut tails;
-            for i in 0..amount {
+            let scope_tails: &mut Vec<Coord> = &mut tails;
+            for _ in 0..amount {
                 match command[0] {
                     "U" => scope_tails[0].y -= 1,
                     "D" => scope_tails[0].y += 1,
@@ -121,7 +120,7 @@ pub fn day9_2(filepath: &str) -> Result<usize, std::io::Error> {
                     _ => panic!("This should not happen!")
                 }
                 for i in 0..scope_tails.len() - 1 {
-                    let new_tail_position = update_tail(scope_tails[i], scope_tails[i+1], last_positions[i]);
+                    let new_tail_position = update_tail(scope_tails[i], scope_tails[i+1]);
                     last_positions[i+1] = scope_tails[i+1];
                     scope_tails[i+1] = new_tail_position;
                     if i == scope_tails.len() - 2 {
@@ -144,7 +143,7 @@ pub fn day9_2(filepath: &str) -> Result<usize, std::io::Error> {
     Ok(result.iter().count())
 }
 
-fn update_tail(head: Coord, tail: Coord, last_head_position: Coord) -> Coord {
+fn update_tail(head: Coord, tail: Coord) -> Coord {
     if !check_touching(head, tail) {
         let x_diff = head.x - tail.x;
         let y_diff = head.y - tail.y;
