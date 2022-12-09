@@ -68,12 +68,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day6_1() {
+    fn test_day8_1() {
         assert_eq!(day8_1("data/test8_1.txt").unwrap(), 21);
     }
 
     #[test]
-    fn test_day6_2() {
+    fn test_day8_2() {
         assert_eq!(day8_2("data/test8_1.txt").unwrap(), 24933642);
     }
 }

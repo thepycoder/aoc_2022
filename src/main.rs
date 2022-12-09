@@ -8,9 +8,10 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 fn main() -> io::Result<()> {
-    let day = 8;
+    let day = 9;
 
     if day == 1 {
         let total = day1::day1_1("data/input1_1.txt");
@@ -75,5 +76,18 @@ fn main() -> io::Result<()> {
         let total = day8::day8_2("data/input8_1.txt");
         println!("{}", total.unwrap());
     }
+
+    if day == 9 {
+        // 8879, 8878 too high
+        // 6091 too high too after fixing dedup
+        // I added one to compensate for the origin, but ofc the rope passed the origin at some point in the 
+        // larger input, so I counted it double. Fixed by adding origin before dedup
+        let total = day9::day9_1("data/input9_1.txt");
+        println!("{}", total.unwrap());
+
+        let total = day9::day9_2("data/input9_1.txt");
+        println!("{}", total.unwrap());
+    }
+
     Ok(())
 }
