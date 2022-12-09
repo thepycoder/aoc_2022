@@ -123,6 +123,6 @@ mod tests {
 
     #[test]
     fn test_day8_2() {
-        assert_eq!(day8_2("data/test8_1.txt").unwrap(), 24933642);
+        assert_eq!(day8_2("data/test8_1.txt").unwrap(), 8);
     }
 }

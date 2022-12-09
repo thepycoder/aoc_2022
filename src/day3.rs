@@ -51,6 +51,6 @@ mod tests {
 
     #[test]
     fn test_day3_2() {
-        assert_eq!(day3_2(include_bytes!["../data/test3_1.txt"]).unwrap(), 12);
+        assert_eq!(day3_2(include_bytes!["../data/test3_1.txt"]).unwrap(), 70);
     }
 }

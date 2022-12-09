@@ -1,12 +1,9 @@
-pub fn day5_1(filestring: &'static str, part2: bool) -> Result<String, std::io::Error> {
+pub fn day5_1(filestring: &'static str, part2: bool, nr_of_stacks: usize) -> Result<String, std::io::Error> {
     let (stacks, moves) = filestring.split_once("\n\n").unwrap();
-
-    // Const arguments are a bitch and the char init requires const as size
-    const AMOUNT_OF_STACKS: usize = 9;
 
     // Prepare vec of vecs to keep track of each stack
     let split_stacks: Vec<&str> = stacks.split("\n").collect();
-    let mut stack_vec: Vec<Vec<char>> = [(); AMOUNT_OF_STACKS].map(|_| Vec::new()).to_vec();
+    let mut stack_vec: Vec<Vec<char>> = vec![Vec::new(); nr_of_stacks];
     for (row, stack_row) in split_stacks.iter().enumerate() {
         for (stack_nr, col) in (1..stack_row.len()).step_by(4).enumerate() {
             let elf_crate = stack_row.chars().nth(col).unwrap();
@@ -57,11 +54,11 @@ mod tests {
 
     #[test]
     fn test_day5_1() {
-        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], false).unwrap(), "CMZ");
+        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], false, 3).unwrap(), "CMZ");
     }
 
     #[test]
     fn test_day5_2() {
-        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], true).unwrap(), "MCD");
+        assert_eq!(day5_1(include_str!["../data/test5_1.txt"], true, 3).unwrap(), "MCD");
     }
 }

@@ -75,11 +75,11 @@ mod tests {
 
     #[test]
     fn test_day2_1_bis() {
-        assert_eq!(day2_1("data/test2_2.txt").unwrap(), 15);
+        assert_eq!(day2_1("data/test2_2.txt").unwrap(), 45);
     }
 
     #[test]
     fn test_day2_2() {
-        assert_eq!(day2_2("data/test2_2.txt").unwrap(), 12);
+        assert_eq!(day2_2("data/test2_1.txt").unwrap(), 12);
     }
 }
