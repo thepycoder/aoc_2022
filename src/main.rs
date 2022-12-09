@@ -73,6 +73,7 @@ fn main() -> io::Result<()> {
         let total = day8::day8_1("data/input8_1.txt");
         println!("{}", total.unwrap());
 
+        // 196 is too low, it was multiply you moron
         let total = day8::day8_2("data/input8_1.txt");
         println!("{}", total.unwrap());
     }
