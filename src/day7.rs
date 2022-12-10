@@ -81,7 +81,7 @@ pub fn day7_1(filepath: &str) -> Result<u64, std::io::Error> {
                 0
             }
         })
-        .map(|item| dbg!(item))
+        // .map(|item| dbg!(item))
         .sum();
 
     Ok(result)

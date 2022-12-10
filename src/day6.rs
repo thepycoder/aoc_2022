@@ -7,10 +7,10 @@ pub fn day6_1(filestring: &'static str, marker_len: usize) -> Result<usize, std:
             let final_answer = i + marker_len;
             return Ok(final_answer)
         }
-        dbg!(slice);
-        dbg!(unique);
+        // dbg!(slice);
+        // dbg!(unique);
     }
-    dbg!(filestring);
+    // dbg!(filestring);
     Ok(0)
 }
 

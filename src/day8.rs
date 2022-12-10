@@ -34,8 +34,8 @@ pub fn day8_1(filepath: &str) -> Result<i32, std::io::Error> {
         parse_visibility(&mut col.slice_mut(s![..;-1]), &mut visibility.slice_mut(s![..;-1]));
     }
 
-    dbg!(&visibility);
-    dbg!(&visibility.sum());
+    // dbg!(&visibility);
+    // dbg!(&visibility.sum());
 
     // dbg!(tree_array);
 
@@ -74,8 +74,8 @@ pub fn day8_2(filepath: &str) -> Result<i32, std::io::Error> {
         parse_score(&mut col.slice_mut(s![..;-1]), &mut score.slice_mut(s![..;-1]));
     }
 
-    dbg!(&score);
-    dbg!(&score.max());
+    // dbg!(&score);
+    // dbg!(&score.max());
 
     // dbg!(tree_array);
 

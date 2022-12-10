@@ -19,7 +19,7 @@ fn deduplicate(coordinates: Vec<Coord>) -> Vec<Coord> {
             deduplicated.push(coord);
         }
     }
-    dbg!(set.len());
+    // dbg!(set.len());
     deduplicated
 }
 
