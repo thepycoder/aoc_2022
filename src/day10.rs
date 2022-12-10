@@ -15,6 +15,8 @@ pub fn day10_1(filepath:  &str) -> Result<i32, std::io::Error> {
     let mut register: i32 = 1;
     let mut trigger: i32 = 20;
     let mut signal_strength: Vec<i32> = Vec::new();
+
+    let mut crt = String::from("");
     
 
     for instruction in instructions_vec.iter() {
@@ -37,6 +39,15 @@ pub fn day10_1(filepath:  &str) -> Result<i32, std::io::Error> {
                 signal_strength.push(cycles * register);
                 trigger += 40;
             }
+            dbg!(cycles);
+            dbg!(register);
+            dbg!("=====");
+            let crt_index = crt.len() as i32 % 40;
+            if (crt_index - register).abs() <= 1 {
+                crt.push('#');
+            } else {
+                crt.push('.');
+            }
             cycles += 1;
         }
 
@@ -46,6 +57,20 @@ pub fn day10_1(filepath:  &str) -> Result<i32, std::io::Error> {
     }
 
     dbg!(&signal_strength);
+    dbg!(&crt);
+
+    // for i in 0..6 {
+    //     println!(crt[i: ])
+    // }
+
+    let answer = &crt.chars()
+        .collect::<Vec<char>>()
+        .chunks(40)
+        .map(|c| c.iter().collect::<String>())
+        .collect::<Vec<String>>()
+        .join("\n");
+
+    println!("{}", answer);
 
     Ok(signal_strength.iter().sum())
 }
