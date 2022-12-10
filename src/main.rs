@@ -12,7 +12,8 @@ mod day9;
 mod day10;
 
 fn main() -> io::Result<()> {
-    let days = (1..9).collect::<Vec<i32>>();
+    // let days = (1..9).collect::<Vec<i32>>();
+    let days = vec![10];
 
     if days.contains(&1) {
         let total = day1::day1_1("data/input1_1.txt");
@@ -89,6 +90,18 @@ fn main() -> io::Result<()> {
 
         let total = day9::day9_2("data/input9_1.txt");
         println!("Day 9 Part 1: {}", total.unwrap());
+    }
+
+    if days.contains(&10) {
+        // 8879, 8878 too high
+        // 6091 too high too after fixing dedup
+        // I added one to compensate for the origin, but ofc the rope passed the origin at some point in the 
+        // larger input, so I counted it double. Fixed by adding origin before dedup
+        let total = day10::day10_1("data/input10_1.txt");
+        println!("Day 10 Part 1: {}", total.unwrap());
+
+        // let total = day9::day9_2("data/input9_1.txt");
+        // println!("Day 9 Part 1: {}", total.unwrap());
     }
 
     Ok(())
