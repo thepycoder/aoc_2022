@@ -106,8 +106,11 @@ fn main() -> io::Result<()> {
     }
 
     if days.contains(&11) {
-        let total = day11::day11_1("data/input11_1.txt", true);
+        let total = day11::day11_1("data/input11_1.txt", 20, true);
         println!("Day 11 Part 1: {}", total.unwrap());
+
+        let total = day11::day11_1("data/input11_1.txt", 10000, false);
+        println!("Day 11 Part 2: {}", total.unwrap());
     }
 
     Ok(())
