@@ -34,8 +34,9 @@ feed to "monkey_turn".
 */
 
 use regex::Regex;
-use std::fs;
+use std::{fs, thread::current};
 
+#[derive(Debug)]
 struct Monkey {
     id: u32,
     items: Vec<u32>,
@@ -43,11 +44,12 @@ struct Monkey {
     operation_value: String,
     test_divisible: u32,
     if_true: u32,
-    if_false: u32
+    if_false: u32,
+    items_checked: u32
 }
 
 
-pub fn day11_1(filepath: &str) -> Result<usize, std::io::Error> {
+pub fn day11_1(filepath: &str, part_one: bool) -> Result<u32, std::io::Error> {
     // Define the regular expression for matching the blocks of text
     let re = Regex::new(r"(?mx)^Monkey\s(\d+):\s+
         Starting\sitems:\s+
@@ -86,7 +88,8 @@ pub fn day11_1(filepath: &str) -> Result<usize, std::io::Error> {
             operation_value: operation_value.to_string(),
             test_divisible,
             if_true,
-            if_false
+            if_false,
+            items_checked:0
         };
 
         &monkies.push(monkey);
@@ -97,16 +100,20 @@ pub fn day11_1(filepath: &str) -> Result<usize, std::io::Error> {
     }
 
 
+    let monkies_len = monkies.len();
     for _ in 0..20 {
-        for monkey_id in 0..monkies.len() {
-            // Make a copy of monkey items
-            // Change stuff in there (cannot change original while looping)
-            let current_monkey: &mut Monkey = &mut monkies.get(monkey_id).unwrap();
-            for i in 0..current_monkey.items.len() {
-                let worry_level: &mut u32 = &mut current_monkey.items.get(i).unwrap();
+        for monkey_id in 0..monkies_len {
+            let current_monkies = &mut monkies;
+            let current_monkey = &mut current_monkies.get_mut(monkey_id).unwrap();
+            dbg!(&monkey_id);
+            let mut to_move: Vec<_> = Vec::new();
+            for _ in 0..current_monkey.items.len() {
+                dbg!(&current_monkey.items);
+                let current_monkey_items = &current_monkey.items;
+                let worry_level = current_monkey_items.get(0).unwrap();
+                current_monkey.items_checked += 1;
+                dbg!(worry_level);
                 let mut new_worry_level: u32;
-                let mut new_items: Vec<u32> = Vec::new();
-                // Change the worry level using operation
                 if current_monkey.operation_value == "old" {
                     new_worry_level = worry_level.pow(2);
                 } else {
@@ -119,25 +126,45 @@ pub fn day11_1(filepath: &str) -> Result<usize, std::io::Error> {
                         _ => panic!("euh"),
                     };
                 }
-                new_items.push(new_worry_level);
-                new_worry_level = new_worry_level / 3;
-        
-                let new_monkey_id;
-                if new_worry_level % current_monkey.test_divisible == 0 {
-                    // push item to monkey if_true
-                    new_monkey_id = current_monkey.if_true;                    
-                } else {
-                    // push item to monkey if_false
-                    new_monkey_id = current_monkey.if_true;
+                if part_one {
+                    new_worry_level = new_worry_level / 3;
                 }
 
-                current_monkey.items.remove(i);
-                &mut monkies[new_monkey_id as usize].items.push(new_worry_level);
+                dbg!(&new_worry_level);
+
+                let new_monkey_id;
+                if new_worry_level % current_monkey.test_divisible == 0 {
+                    new_monkey_id = current_monkey.if_true;
+                } else {
+                    new_monkey_id = current_monkey.if_false;
+                }
+
+                current_monkey.items.remove(0);
+                to_move.push((monkey_id, new_monkey_id, new_worry_level));
+
+                // monkies[new_monkey_id as usize].items.push(new_worry_level);
+
             }
+
+            for (from_id, to_id, value) in to_move {
+                let new_monkey = &mut current_monkies.get_mut(to_id as usize).unwrap();
+                new_monkey.items.push(value);
+            }
+
         }
     }
 
-    Ok(0)
+    let mut monkey_business: Vec<u32> = Vec::new();
+    for m in monkies {
+        println!("Monkey: {}", m.id);
+        println!("Times Checked: {}", m.items_checked);
+        monkey_business.push(m.items_checked);
+    }
+    monkey_business.sort_by(|a, b| b.cmp(a));
+    let answer = monkey_business[0] * monkey_business[1];
+
+
+    Ok(answer)
 
 }
 
@@ -167,7 +194,12 @@ mod tests {
 
     #[test]
     fn test_day11_1() {
-        assert_eq!(day11_1("data/test11_1.txt").unwrap(), 13);
+        assert_eq!(day11_1("data/test11_1.txt", true).unwrap(), 10605);
+    }
+
+    #[test]
+    fn test_day11_2() {
+        assert_eq!(day11_1("data/test11_1.txt", false).unwrap(), 2713310158);
     }
 }
 
