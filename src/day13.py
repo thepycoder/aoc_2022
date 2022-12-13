@@ -38,7 +38,7 @@ def compare(packet1, packet2):
         # Only here if p1 == p2
         index += 1
 
-def bubbleSort(arr):
+def bubble_sort(arr):
     n = len(arr)
  
     # Traverse through all array elements
@@ -78,7 +78,7 @@ with open("data/input13_1.txt", "r") as input_file:
         new_chunk_list += [eval(c) for c in chunk.split("\n")]
     new_chunk_list.append([[2]])
     new_chunk_list.append([[6]])
-    bubbleSort(new_chunk_list)
+    bubble_sort(new_chunk_list)
     print(new_chunk_list)
     divider_1 = new_chunk_list.index([[2]]) + 1
     print(divider_1)
