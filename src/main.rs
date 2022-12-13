@@ -12,10 +12,11 @@ mod day9;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 
 fn main() -> io::Result<()> {
     // let days = (1..9).collect::<Vec<i32>>();
-    let days = vec![12];
+    let days = vec![13];
 
     if days.contains(&1) {
         let total = day1::day1_1("data/input1_1.txt");
@@ -120,9 +121,14 @@ fn main() -> io::Result<()> {
 
         let total = day12::day12_2("data/input12_1.txt");
         println!("Day 12 Part 2: {}", total.unwrap());
+    }
 
-        // let total = day11::day11_1("data/input11_1.txt", 10000, false);
-        // println!("Day 11 Part 2: {}", total.unwrap());
+    if days.contains(&13) {
+        // 6911 too high
+        // I did it in python :(
+        // It literally took half an hour there...
+        // let total = day13::day13_1("data/input13_1.txt");
+        // println!("Day 13 Part 1: {}", total.unwrap());
     }
 
     Ok(())
