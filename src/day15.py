@@ -1,3 +1,4 @@
+import math
 import re
 
 
@@ -14,7 +15,7 @@ class Coord:
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
-    
+
     def __hash__(self):
         return hash((self.x, self.y))
 
@@ -51,12 +52,14 @@ def day15(filename, rownr):
     sensors, beacons, largest_distance_between_sensor_and_beacon, most_left, most_right = read_input(filename)
     for sensor, beacon in zip(sensors, beacons):
         sensor_range = sensor - beacon
-        if sensor.y + sensor_range >= rownr or sensor.y - sensor_range <= rownr:        
-            for i in range(most_left - largest_distance_between_sensor_and_beacon, most_right + largest_distance_between_sensor_and_beacon + 1):
-                to_check = Coord(i, rownr)
-                if to_check - sensor <= sensor - beacon and to_check not in beacons:
-                    row.add(to_check)
+        if sensor.y + sensor_range >= rownr >= sensor.y - sensor_range:
+            x_distance_sensor_left_intersection = sensor_range - abs(sensor.y - rownr)
+            left_intersection = Coord(sensor.x - x_distance_sensor_left_intersection, rownr)
+            right_intersection = Coord(sensor.x + x_distance_sensor_left_intersection, rownr)
+            for x in range(left_intersection.x, right_intersection.x):
+                row.add(Coord(x, rownr))
 
+    # print(len(row), sorted([c.x for c in row]))
     print(len(row))
 
 if __name__ == '__main__':
