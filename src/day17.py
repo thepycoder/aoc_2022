@@ -1,5 +1,7 @@
+from matplotlib import pyplot as plt
 import numpy as np
 from tqdm import tqdm
+from sklearn import svm
 
 
 class Rock:
@@ -93,7 +95,7 @@ def part1(filename, end_iteration):
     # print(test)
 
     iteration = 0
-    stationary_rocks = []
+    plot_data = []
     height = 1
 
     for rock_nr, rock in tqdm(enumerate(rock_generator())):
@@ -120,19 +122,56 @@ def part1(filename, end_iteration):
             iteration += 1
 
         rock.put(grid)
-        stationary_rocks.append(rock)
         # Clean out empty rows
         grid = grid[~np.all(grid == 0, axis=1)]
         # Keep track of tower height
         height = grid.shape[0]
 
+        plot_data.append((rock_nr, height))
+
         if rock_nr == end_iteration - 1:
-            return height
+            return height - 1, plot_data  # account for bottom row
 
 
-# print(grid)
-print(f"Test part 1: {part1('data/test17_1.txt', 2022) - 1}")
-print(f"Part 1: {part1('data/input17_1.txt', 2022) - 1}")
+
+height_test1, plot_data = part1('data/test17_1.txt', 2022)
+print(f"Test part 1: {height_test1}")
+
+x_data = [x[0] for x in plot_data]
+y_data = [y[1] for y in plot_data]
+
+# import plotly.express as px
+# fig = px.scatter(x=x_data, y=y_data)
+# fig.show()
+
+# 1958 - 1923 get these values visually using plotly
+len_pattern = 1958 - 1923
+print(len_pattern)
+
+pattern = []
+for i in range(1923, 1923 + len_pattern):
+    diff = y_data[i+1] - y_data[i]
+    diff_1 = y_data[i+len_pattern+1] - y_data[i+len_pattern]
+    print(diff, diff_1, y_data[i], y_data[i+len_pattern], y_data[i] - y_data[i+len_pattern])
+    pattern.append(diff)
+
+rocks = (1000000000000 - 2022)
+print((rocks // len_pattern) * 53 + sum(pattern[:(rocks % len_pattern)]) + height_test1 - 1)
 
 
-# print(f"Test part 2: {part1('data/test17_1.txt', 1000000000000) - 1}")
+len_pattern = 1958 - 1923
+print(len_pattern)
+
+pattern = []
+for i in range(1923, 1923 + len_pattern):
+    diff = y_data[i+1] - y_data[i]
+    diff_1 = y_data[i+len_pattern+1] - y_data[i+len_pattern]
+    print(diff, diff_1, y_data[i], y_data[i+len_pattern], y_data[i] - y_data[i+len_pattern])
+    pattern.append(diff)
+
+rocks = (1000000000000 - 2022)
+print((rocks // len_pattern) * 53 + sum(pattern[:(rocks % len_pattern)]) + height_test1 - 1)
+
+##########
+height_part1, plot_data = part1('data/input17_1.txt', 2022)
+print(f"Part 1: {height_part1}")
