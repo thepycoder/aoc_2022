@@ -72,7 +72,7 @@ def combine_ranges(ranges):
     return combined_ranges
 
 
-@profile
+# @profile
 def day15_1(sensors, beacons, rownr):
     row = []
     for sensor, beacon in zip(sensors, beacons):
