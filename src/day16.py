@@ -141,6 +141,30 @@ def calc_shortest_paths(G, nodes):
 #     return best_valve, best_score
 
 
+def evalGA_part1(route, shortest_paths, useful_valves, valves):
+    time_left = 30
+    total_flow_rate = 0
+    # Start with the distance between AA starting point and the first valve
+    time_left -= shortest_paths[(useful_valves[route[0]], 'AA')] - 1
+    # For each combination of 2 valves in the route
+    # for valve1, valve2 in zip(route, route[1:]):
+    for i in range(len(route) - 1):
+        valve1 = useful_valves[route[i]]
+        valve2 = useful_valves[route[i+1]]
+        # Subtract 1 from remaining time for opening the valve
+        time_left -= 1
+        total_flow_rate += time_left * valves[valve1]
+        time_left -= shortest_paths[(valve1, valve2)] - 1
+
+        if time_left <= 0:
+            return (total_flow_rate,)
+    # Open the last valve
+    time_left -= 1
+    total_flow_rate += time_left * valves[useful_valves[route[-1]]]
+
+    return (total_flow_rate,)
+
+
 def day16_1_evolutionary(filename):
     G, valves = get_graph(filename)
     useful_valves = [k for k, v in valves.items() if v > 0]
@@ -161,33 +185,10 @@ def day16_1_evolutionary(filename):
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.indices)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-    def evalGA(route):
-        time_left = 30
-        total_flow_rate = 0
-        # Start with the distance between AA starting point and the first valve
-        time_left -= shortest_paths[(useful_valves[route[0]], 'AA')] - 1
-        # For each combination of 2 valves in the route
-        # for valve1, valve2 in zip(route, route[1:]):
-        for i in range(route_len - 1):
-            valve1 = useful_valves[route[i]]
-            valve2 = useful_valves[route[i+1]]
-            # Subtract 1 from remaining time for opening the valve
-            time_left -= 1
-            total_flow_rate += time_left * valves[valve1]
-            time_left -= shortest_paths[(valve1, valve2)] - 1
-
-            if time_left <= 0:
-                return (total_flow_rate,)
-        # Open the last valve
-        time_left -= 1
-        total_flow_rate += time_left * valves[useful_valves[route[-1]]]
-
-        return (total_flow_rate,)
-
     toolbox.register("mate", tools.cxPartialyMatched)
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)
     toolbox.register("select", tools.selTournament, tournsize=3)
-    toolbox.register("evaluate", evalGA)
+    toolbox.register("evaluate", evalGA_part1, shortest_paths=shortest_paths, useful_valves=useful_valves, valves=valves)
 
     random.seed(169)
 
@@ -205,7 +206,7 @@ def day16_1_evolutionary(filename):
     return pop, stats, hof
 
 
-def evalGA(routes, shortest_paths, useful_valves, valves):
+def evalGA_part2(routes, shortest_paths, useful_valves, valves):
     # Split routes with highest nr as the cutoff point
     # List 1 is me, List 2 is the elephant
     cutoff = routes.index(len(routes) - 1)
@@ -273,7 +274,7 @@ def day16_2_evolutionary(filename, generations, seed):
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.03)
     toolbox.register("select", tools.selTournament, tournsize=5)
     # toolbox.register("select", tools.selBest)
-    toolbox.register("evaluate", evalGA, shortest_paths=shortest_paths, useful_valves=useful_valves, valves=valves)
+    toolbox.register("evaluate", evalGA_part2, shortest_paths=shortest_paths, useful_valves=useful_valves, valves=valves)
 
     random.seed(seed)
 
@@ -281,9 +282,6 @@ def day16_2_evolutionary(filename, generations, seed):
 
     hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind: ind.fitness.values)
-    # stats.register("avg", np.mean)
-    # stats.register("std", np.std)
-    # stats.register("min", np.min)
     stats.register("max", np.max)
 
     algorithms.eaSimple(pop, toolbox, 0.7, 0.3, generations, stats=stats, halloffame=hof, verbose=False)
