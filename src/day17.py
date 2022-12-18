@@ -111,7 +111,7 @@ def part1(filename, end_iteration):
                 rock.move_right(grid)
             if jet == '<':
                 rock.move_left(grid)
-            
+
             # display_grid(grid, iteration, rock)
 
             # Move by gravity
@@ -133,45 +133,45 @@ def part1(filename, end_iteration):
             return height - 1, plot_data  # account for bottom row
 
 
-
-height_test1, plot_data = part1('data/test17_1.txt', 2022)
+height_test1, plot_data_test1 = part1('data/test17_1.txt', 2022)
 print(f"Test part 1: {height_test1}")
+height_part1, _ = part1('data/input17_1.txt', 2022)
+print(f"Part 1: {height_part1}")
 
-x_data = [x[0] for x in plot_data]
-y_data = [y[1] for y in plot_data]
-
-# import plotly.express as px
-# fig = px.scatter(x=x_data, y=y_data)
-# fig.show()
-
-# 1958 - 1923 get these values visually using plotly
-len_pattern = 1958 - 1923
-print(len_pattern)
-
-pattern = []
-for i in range(1923, 1923 + len_pattern):
-    diff = y_data[i+1] - y_data[i]
-    diff_1 = y_data[i+len_pattern+1] - y_data[i+len_pattern]
-    print(diff, diff_1, y_data[i], y_data[i+len_pattern], y_data[i] - y_data[i+len_pattern])
-    pattern.append(diff)
-
-rocks = (1000000000000 - 2022)
-print((rocks // len_pattern) * 53 + sum(pattern[:(rocks % len_pattern)]) + height_test1 - 1)
+part2_iterations = 30000
+height_part1, plot_data_part1 = part1('data/input17_1.txt', part2_iterations)
 
 
-len_pattern = 1958 - 1923
-print(len_pattern)
+def part2(plot_data, previous_answer):
+    x_data = [x[0] for x in plot_data]
+    y_data = [y[1] for y in plot_data]
 
-pattern = []
-for i in range(1923, 1923 + len_pattern):
-    diff = y_data[i+1] - y_data[i]
-    diff_1 = y_data[i+len_pattern+1] - y_data[i+len_pattern]
-    print(diff, diff_1, y_data[i], y_data[i+len_pattern], y_data[i] - y_data[i+len_pattern])
-    pattern.append(diff)
+    # import plotly.express as px
+    # fig = px.scatter(x=x_data, y=y_data)
+    # fig.show()
 
-rocks = (1000000000000 - 2022)
-print((rocks // len_pattern) * 53 + sum(pattern[:(rocks % len_pattern)]) + height_test1 - 1)
+    len_pattern = 1
+    while True:
+        diffs_this_cycle = []
+        diffs_next_cycle = []
+        for i in range(len(x_data) - 1 - 2*len_pattern, len(x_data) - 1 - len_pattern):
+            diffs_this_cycle.append(y_data[i+1] - y_data[i])
+            diffs_next_cycle.append(y_data[i+len_pattern+1] - y_data[i+len_pattern])
+        if diffs_this_cycle == diffs_next_cycle:
+            break
+        else:
+            len_pattern += 1
+    print(len_pattern)
+    rocks = (1000000000000 - part2_iterations)
+    return (rocks // len_pattern) * sum(diffs_this_cycle) + sum(diffs_this_cycle[:(rocks % len_pattern)]) + previous_answer
+
+# 30724685831 too low
+# 1541449275380 too high
+# 1541449275379 too high
+# 1541449275365
+print(f"Test part 2: {part2(plot_data_test1, height_test1)}")
+print(f"Part 2: {part2(plot_data_part1, height_part1)}")
 
 ##########
-height_part1, plot_data = part1('data/input17_1.txt', 2022)
-print(f"Part 1: {height_part1}")
+# height_part1, plot_data = part1('data/input17_1.txt', 2022)
+# print(f"Part 1: {height_part1}")
