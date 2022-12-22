@@ -119,6 +119,7 @@ class Me2:
     
     def move_left(self):
         potential_position = [self.row, self.col - 1]
+        potential_heading = self.heading
         # Wrap around
         if potential_position[1] < 0 or self.grid[potential_position[0]][potential_position[1]] == 1:
             # We're corssing the top left edge, check which side of the cube we are on by looking at the row nr
@@ -126,96 +127,98 @@ class Me2:
                 # We're in section 1 and crossing boundary 1 -> 3
                 potential_position = [self.row_section, self.col_section + potential_position[0]]
                 # Leaving 1 going left = entering 3 going down
-                self.heading = 180
+                potential_heading = 180
             # We're corssing the middle left edge (also side of grid)
             elif self.grid.shape[0] / 3 <= potential_position[0] < 2 * self.grid.shape[0] / 3:
                 # We're in section 2 and crossing boundary 2 -> 6
-                potential_position = [3 * self.row_section, 4 * self.col_section - (potential_position[0] - self.row_section)]
+                potential_position = [3 * self.row_section - 1, 4 * self.col_section - (potential_position[0] - self.row_section) - 1]
                 # Leaving 2 going left = entering 6 going up 
-                self.heading = 0
+                potential_heading = 0
             # We're corssing the lower left edge
             elif 2 * self.grid.shape[0] / 3 <= potential_position[0] < 3 * self.grid.shape[0] / 3:
                 # We're in section 5 and crossing boundary left 5 -> 3
-                potential_position = [2 * self.row_section, 2 * self.col_section - (potential_position[0] - 2 * self.row_section)]
+                potential_position = [2 * self.row_section - 1, 2 * self.col_section - (potential_position[0] - 2 * self.row_section) - 1]
                 # Leaving 5 going left = entering 3 going up
-                self.heading = 0
-                
-            potential_position[1] = np.where(self.grid[potential_position[0], :] != 1)[0][-1]
-        return self.apply_move(potential_position)
+                potential_heading = 0
+        return self.apply_move(potential_position, potential_heading)
 
     def move_right(self):
         potential_position = [self.row, self.col + 1]
+        potential_heading = self.heading
         # Wrap around
         if potential_position[1] >= self.grid.shape[1] or self.grid[potential_position[0]][potential_position[1]] == 1:
             # We're corssing the top right edge
             if 0 <= potential_position[0] < self.row_section:
                 # We're in section 1 and crossing boundary 1 -> 6
-                potential_position = [3 * self.row_section - potential_position[0], self.col_section * 4]
+                potential_position = [3 * self.row_section - potential_position[0] - 1, self.col_section * 4 - 1]
                 # Leaving 1 going right = entering 6 going left
-                self.heading = 270
+                potential_heading = 270
             # We're corssing the middle right edge
             elif self.row_section <= potential_position[0] < 2 * self.row_section:
                 # We're in section 4 and crossing boundary 4 -> 6
-                potential_position = [2 * self.row_section, 4 * self.col_section - (potential_position[0] - self.row_section)]
+                potential_position = [2 * self.row_section, 4 * self.col_section - (potential_position[0] - self.row_section) - 1]
                 # Leaving 4 going right = entering 6 going down 
-                self.heading = 180
+                potential_heading = 180
             # We're corssing the lower left edge
             elif 2 * self.row_section <= potential_position[0] < 3 * self.row_section:
                 # We're in section 6 and crossing boundary 6 -> 1
-                potential_position = [self.row_section - (potential_position[0] - 2 * self.row_section), 3 * self.col_section]
+                potential_position = [self.row_section - (potential_position[0] - 2 * self.row_section), 3 * self.col_section - 1]
                 # Leaving 5 going left = entering 3 going up
-                self.heading = 270
-        return self.apply_move(potential_position)
+                potential_heading = 270
+        return self.apply_move(potential_position, potential_heading)
 
     def move_up(self):
         potential_position = [self.row - 1, self.col]
+        potential_heading = self.heading
         # Wrap around
         if potential_position[0] < 0 or self.grid[potential_position[0]][potential_position[1]] == 1:
             # We're corssing the left top edge
             if 0 <= potential_position[1] < self.col_section:
-                potential_position = [0, 3 * self.col_section - potential_position[1]]
-                self.heading = 180
+                potential_position = [0, 3 * self.col_section - potential_position[1] - 1]
+                potential_heading = 180
             # We're corssing the leftmiddle top edge
             elif self.col_section <= potential_position[1] < 2 * self.col_section:
                 potential_position = [potential_position[1] - self.col_section , 2 * self.col_section]
-                self.heading = 90
+                potential_heading = 90
             # We're corssing the rightmiddle top edge
             elif 2 * self.col_section <= potential_position[1] < 3 * self.col_section:
-                potential_position = [self.row_section, self.col_section - (potential_position[1] - 2 * self.col_section)]
-                self.heading = 180
+                potential_position = [self.row_section, self.col_section - (potential_position[1] - 2 * self.col_section) - 1]
+                potential_heading = 180
             # We're corssing the right top edge
             elif 3 * self.col_section <= potential_position[1] < 4 * self.col_section:
-                potential_position = [2 * self.row_section - (potential_position[1] - 3 * self.col_section), 3 * self.col_section]
-                self.heading = 270
-        return self.apply_move(potential_position)
+                potential_position = [2 * self.row_section - (potential_position[1] - 3 * self.col_section) - 1, 3 * self.col_section - 1]
+                potential_heading = 270
+        return self.apply_move(potential_position, potential_heading)
 
     def move_down(self):
         potential_position = [self.row + 1, self.col]
+        potential_heading = self.heading
         # Wrap around
         if potential_position[0] >= self.grid.shape[0] or self.grid[potential_position[0]][potential_position[1]] == 1:
             # We're corssing the left top edge
             if 0 <= potential_position[1] < self.col_section:
-                potential_position = [3 * self.row_section, 3 * self.col_section - potential_position[1]]
-                self.heading = 0
+                potential_position = [3 * self.row_section - 1, 3 * self.col_section - potential_position[1] - 1]
+                potential_heading = 0
             # We're corssing the leftmiddle top edge
             elif self.col_section <= potential_position[1] < 2 * self.col_section:
-                potential_position = [3 * self.row_section - (potential_position[1] - self.col_section), 2 * self.col_section]
-                self.heading = 90
+                potential_position = [3 * self.row_section - (potential_position[1] - self.col_section) - 1, 2 * self.col_section]
+                potential_heading = 90
             # We're corssing the rightmiddle top edge
             elif 2 * self.col_section <= potential_position[1] < 3 * self.col_section:
-                potential_position = [2 * self.row_section, self.col_section - (potential_position[1] - 2 * self.col_section)]
-                self.heading = 0
+                potential_position = [2 * self.row_section - 1, self.col_section - (potential_position[1] - 2 * self.col_section) - 1]
+                potential_heading = 0
             # We're corssing the right top edge
             elif 3 * self.col_section <= potential_position[1] < 4 * self.col_section:
-                potential_position = [2 * self.row_section - (potential_position[1] - 3 * self.col_section), 0]
-                self.heading = 90
-        return self.apply_move(potential_position)
+                potential_position = [2 * self.row_section - (potential_position[1] - 3 * self.col_section) - 1, 0]
+                potential_heading = 90
+        return self.apply_move(potential_position, potential_heading)
 
-    def apply_move(self, potential_position):
+    def apply_move(self, potential_position, potential_heading):
         potential_position = list(map(int, potential_position))
         if self.check_collision(potential_position):
             return False
         self.row, self.col = potential_position
+        self.heading = potential_heading
         return True
     
     def check_collision(self, position):
@@ -304,6 +307,7 @@ def day22_1(filename):
             me2.change_heading(rotation == 'L')
         me2.show_map()
     
+    # me2.change_heading(instructions[-2][1] == 'L')
     # print(me.__dict__)
     heading_score_mapping = {90: 0, 180: 1, 270: 2, 0: 3}
     print(1000*(me.row+1) + 4*(me.col+1) + heading_score_mapping[me.heading])
@@ -311,6 +315,7 @@ def day22_1(filename):
 
 
 if __name__ == '__main__':
-    day22_1("data/test22_1.txt")
+    # day22_1("data/test22_2.txt")
     # 80393 too high
-    # day22_1("data/input22_1.txt")
+    # 48416 too high p2
+    day22_1("data/input22_1.txt")
