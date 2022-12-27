@@ -70,7 +70,7 @@ def day18(filename):
                 q.put(neighbor)
             except IndexError:
                 continue
-    
+
     # Now we have the same problem as in part 1, but in reverse:
     # for each pocket of air we need to count its outside surface area. Meaning 6*blocks - adjacent_sides
     coordinates = np.where(grid == 0)
